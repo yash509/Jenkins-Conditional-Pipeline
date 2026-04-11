@@ -21,3 +21,49 @@ pipeline {
         }
     }
 }
+
+
+
+
+--------------------------------------- 2nd way for the Work using the below Pipeline----------------------------------------------------------------------------
+
+
+pipeline {
+    agent {
+        node {
+            label "stapp01"
+            customWorkspace '/var/www/html'
+        }
+    }
+    
+    parameters{
+        string (
+            name: 'BRANCH',
+            defaultValue: 'master',
+            description: 'Branch to deploy (master or feature)'
+        )
+    }
+
+    stages {
+        stage('Deploy') {
+            steps {
+                dir('web_app'){
+                    script {
+                        if (params.BRANCH != 'master' && params.BRANCH != 'feature'){
+                        error("Invalid BRANCH parameter. Only master or feature are allowed")
+                    }
+        
+                    sh """
+                    git fetch origin
+                    git checkout ${params.BRANCH}
+                    git pull origin ${params.BRANCH}
+                    """ 
+                    }
+                }
+            }
+        }
+    }
+}
+
+
+
