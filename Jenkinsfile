@@ -1,3 +1,35 @@
+-------------------------------------------------------------------------------------------Working Pipeline--------------------------------------------------------------------------------------------------
+
+    
+pipeline {
+    agent { label 'stapp01' }
+
+    parameters {
+        string(name: 'BRANCH', defaultValue: 'master', description: 'Branch to deploy (master or feature)')
+    }
+
+    stages {
+        stage('Deploy') {
+            steps {
+                script {
+                    sh '''
+                    git config --global --add safe.directory /var/www/html
+                    cd /var/www/html
+                    git fetch origin
+                    git checkout ${BRANCH}
+                    git reset --hard origin/${BRANCH}
+                    git clean -fd
+                    '''
+                }
+            }
+        }
+    }
+}
+
+
+-------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    
 pipeline {
     agent {
         label "stapp01"
