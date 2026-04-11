@@ -50,7 +50,7 @@ pipeline {
                 dir('web_app'){
                     script {
                         if (params.BRANCH != 'master' && params.BRANCH != 'feature'){
-                        error("Invalid BRANCH parameter. Only master or feature are allowed")
+                        error: "Invalid BRANCH value: ${params.BRANCH}"
                     }
         
                     sh """
@@ -64,6 +64,7 @@ pipeline {
         }
     }
 }
+
 
 
 
